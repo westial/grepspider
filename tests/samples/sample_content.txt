@@ -1,0 +1,31 @@
+Date: Wed, 29 Jun 2016 22:23:16 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: mw1267.eqiad.wmnet
+X-Powered-By: HHVM/3.12.1
+X-Content-Type-Options: nosniff
+Vary: Accept-Encoding,X-Forwarded-Proto,Cookie
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Location: https://donate.wikimedia.org/w/index.php?title=Special:FundraiserLandingPage&country=XX&uselang=en&utm_medium=spontaneous&utm_source=fr-redir&utm_campaign=spontaneous
+Backend-Timing: D=18521 t=1467238996478586
+X-Varnish: 2554581738, 4212013579, 3718584331
+Via: 1.1 varnish, 1.1 varnish, 1.1 varnish
+Age: 0
+X-Cache: cp1054 miss, cp3042 pass, cp3043 pass
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Set-Cookie: WMF-Last-Access=29-Jun-2016;Path=/;HttpOnly;secure;Expires=Sun, 31 Jul 2016 12:00:00 GMT
+X-Analytics: https=1;nocookies=1
+X-Client-IP: 83.43.166.84
+Cache-Control: private, s-maxage=0, max-age=0, must-revalidate
+Set-Cookie: GeoIP=ES:56:Barcelona:41.39:2.16:v4; Path=/; secure; Domain=.wikimedia.org
+
+
+b'<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=ext.tmh.thumbnail.styles%7Cext.uls.nojs%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cskins.vector.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/w/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.28.0-wmf.8"/>
+<meta name="referrer" content="origin-when-cross-origin"/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="shortcut icon" href="/static/favicon/wmf.ico"/>'

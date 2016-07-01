@@ -1,0 +1,5 @@
+.env
+.idea
+.py3env
+build
+tmp
