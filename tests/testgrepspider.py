@@ -20,9 +20,9 @@ class TestGrepSpider(unittest.TestCase):
         self.spider = None
         pass
 
-    def _crawl(self, provider, recursive=False):
+    def _crawl(self, provider, *flags, recursive=False):
         links = tuple(provider())
-        regex_flags = tuple([re.IGNORECASE])
+        regex_flags = flags
         spoil_pattern = 'title[^(?: is not a spoil)]'
         self.spider = Spider(*links, recursive=recursive)
         self.spider.crawl(
@@ -31,7 +31,7 @@ class TestGrepSpider(unittest.TestCase):
         )
 
     def test_recursive(self):
-        self._crawl(self.provide_1_link_recursive, True)
+        self._crawl(self.provide_1_link_recursive, re.IGNORECASE, recursive=True)
         unique = 11
         broken = 1
         stored = 35
@@ -39,8 +39,17 @@ class TestGrepSpider(unittest.TestCase):
         external = 1
         self._assert_counters(unique, broken, stored, spoil, external)
 
+    def test_recursive_no_flags(self):
+        self._crawl(self.provide_1_link_recursive, recursive=True)
+        unique = 11
+        broken = 1
+        stored = 35
+        spoil = 21
+        external = 1
+        self._assert_counters(unique, broken, stored, spoil, external)
+
     def test_no_recursive_multiple(self):
-        self._crawl(self.provide_2_links)
+        self._crawl(self.provide_2_links, re.IGNORECASE)
         unique = 7
         broken = 0
         stored = 12

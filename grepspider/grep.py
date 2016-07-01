@@ -105,4 +105,7 @@ class Grep(object):
     def _find_spoils(cls, content, spoil_pattern, regex_flags):
         if not spoil_pattern:
             return None
-        return re.findall(spoil_pattern, content, regex_flags)
+        if regex_flags:
+            return re.findall(spoil_pattern, content, regex_flags)
+        else:
+            return re.findall(spoil_pattern, content)
