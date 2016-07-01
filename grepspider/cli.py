@@ -6,7 +6,15 @@ import argparse
 
 import re
 
+import signal
+
 from grepspider.spider import Spider
+
+
+def signal_term():
+    global spider
+    spider.print_out('\n--- Caught SIGTERM; Attempting to quit gracefully ---')
+    spider.statistics()
 
 parser = argparse.ArgumentParser(
     description='Recursive web crawler with regular expression content filter.'
@@ -25,6 +33,14 @@ parser.add_argument(
     type=str,
     required=False,
     help='User with permission on server'
+)
+
+parser.add_argument(
+    '-o',
+    '--output',
+    type=str,
+    required=False,
+    help='Writes output to this file'
 )
 
 parser.add_argument(
@@ -74,6 +90,7 @@ arg_config = parser.parse_args()
 links = arg_config.urls
 spoil_pattern = arg_config.regex
 recursive = arg_config.recursive
+output_file = arg_config.output_file
 
 regex_flags = list()
 
@@ -92,5 +109,8 @@ if arg_config.multiline:
 if arg_config.dotall:
     regex_flags.append(re.DOTALL)
 
-spider = Spider(*links, recursive=recursive)
+signal.signal(signal.SIGTERM, signal_term)
+signal.signal(signal.SIGINT , signal_term)
+
+spider = Spider(*links, recursive=recursive, output_file=output_file)
 spider.crawl(*regex_flags, spoil_pattern=spoil_pattern)

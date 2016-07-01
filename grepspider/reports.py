@@ -9,8 +9,9 @@ class Report:
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, *link, recursive=False):
+    def __init__(self, *link, recursive=False, output_file=None):
         self._recursive = recursive
+        self._output_file = output_file
         self._links = list(link)
         self._unique_links = set(self._links)
         self._parsed_link = None
@@ -28,6 +29,18 @@ class Report:
         self._count_stored = 0
         self._count_external = 0
         self._count_spoil = 0
+
+    def print_out(self, content):
+        if self._output_file:
+            try:
+                with open(self._output_file, 'w+') as output:
+                    output.write(content)
+            except (IOError, UnboundLocalError) as exc:
+                raise Exception(
+                    'Output file error. Exception: {!s}'.format(str(exc))
+                )
+        else:
+            print(content)
 
     def reset_statistics(self):
         """
@@ -128,63 +141,63 @@ class MarkDownReport(Report):
     """
 
     def statistics(self):
-        print('\n## Total Statistics ##\n')
-        print('* Local unique links     {:d}'.format(len(self._unique_links)))
-        print('* Local broken links     {:d}'.format(self._total_count_broken))
-        print('* Links found            {:d}'.format(self._total_count_stored))
-        print('* Spoils found           {:d}'.format(self._total_count_spoil))
-        print('* External links         {:d}'.format(self._total_count_external))
+        self.print_out('\n## Total Statistics ##\n')
+        self.print_out('* Local unique links     {:d}'.format(len(self._unique_links)))
+        self.print_out('* Local broken links     {:d}'.format(self._total_count_broken))
+        self.print_out('* Links found            {:d}'.format(self._total_count_stored))
+        self.print_out('* Spoils found           {:d}'.format(self._total_count_spoil))
+        self.print_out('* External links         {:d}'.format(self._total_count_external))
 
     def link_report(self):
         if self._stored_broken_links:
-            print(
+            self.print_out(
                 '\n## [!] Broken Link ({!s}) ##\n'.format(self._parsed_link.original)
             )
             self.broken_links_out()
             return
 
-        print('## [v] Report for ({!s}) ##'.format(self._parsed_link.original))
+        self.print_out('## [v] Report for ({!s}) ##'.format(self._parsed_link.original))
         if self._stored_links:
-            print(
+            self.print_out(
                 '\n### Found Links ({:d}) ###\n'.format(
                     self._count_stored
                 )
             )
             self.found_links_out()
         if self._stored_spoils:
-            print(
+            self.print_out(
                 '\n### Found Spoils ({:d}) ###\n'.format(self._count_spoil)
             )
             self.spoils_out()
         if self._stored_ext_links:
-            print(
+            self.print_out(
                 '\n### External Links ({:d}) ###\n'.format(self._count_external)
             )
             self.ext_links_out()
-        print()
+        self.print_out()
         self.reset_statistics()
 
     def found_links_out(self):
         if not self._stored_links:
             return
-        print('# {!s}'.format(self._stored_links.pop(0)))
+        self.print_out('# {!s}'.format(self._stored_links.pop(0)))
         return self.found_links_out()
 
     def spoils_out(self):
         if not self._stored_spoils:
             return
-        print('# {!s}'.format(self._stored_spoils.pop(0)))
+        self.print_out('# {!s}'.format(self._stored_spoils.pop(0)))
         return self.spoils_out()
 
     def broken_links_out(self):
         if not self._stored_broken_links:
             return
         error, link = self._stored_broken_links.pop(0)
-        print('# {!s} - {!s}'.format(error, link))
+        self.print_out('# {!s} - {!s}'.format(error, link))
         return self.broken_links_out()
 
     def ext_links_out(self):
         if not self._stored_ext_links:
             return
-        print('* {!s}'.format(self._stored_ext_links.pop()))
+        self.print_out('* {!s}'.format(self._stored_ext_links.pop()))
         return self.ext_links_out()
