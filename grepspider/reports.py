@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Super client class"""
 from abc import ABCMeta, abstractmethod
+from datetime import datetime
 
 from grepspider.exceptions import BrokenLink
 
@@ -30,17 +31,7 @@ class Report:
         self._count_external = 0
         self._count_spoil = 0
 
-    def print_out(self, content=""):
-        if self._output_file:
-            try:
-                with open(self._output_file, 'w+') as output:
-                    output.write(content)
-            except (IOError, UnboundLocalError) as exc:
-                raise Exception(
-                    'Output file error. Exception: {!s}'.format(str(exc))
-                )
-        else:
-            print(content)
+        self.print_title()
 
     def reset_statistics(self):
         """
@@ -97,41 +88,55 @@ class Report:
         return link
 
     @abstractmethod
+    def print_title(self):
+        """
+        Print title at the beginning.
+        """
+        pass
+
+    @abstractmethod
+    def print_out(self, content):
+        """
+        Print the output.
+        """
+        pass
+
+    @abstractmethod
     def link_report(self):
         """
-        Full report for the current link
+        Full report for the current link.
         """
         pass
 
     @abstractmethod
     def statistics(self):
         """
-        Statistics report
+        Statistics report.
         """
 
     @abstractmethod
     def found_links_out(self):
         """
-        Report for all active links found into link's page
+        Report for all active links found into link's page.
         :return:
         """
 
     @abstractmethod
     def spoils_out(self):
         """
-        Report for all spoils found into link's page
+        Report for all spoils found into link's page.
         """
 
     @abstractmethod
     def broken_links_out(self):
         """
-        Report for all broken links found into link's page
+        Report for all broken links found into link's page.
         """
 
     @abstractmethod
     def ext_links_out(self):
         """
-        Report for all external links found into link's page
+        Report for all external links found into link's page.
         """
 
 
@@ -141,17 +146,38 @@ class MarkDownReport(Report):
     """
 
     def statistics(self):
-        self.print_out('\n## Total Statistics ##\n')
+        self.print_out('\n\r## Total Statistics ##\n\r')
         self.print_out('* Local unique links     {:d}'.format(len(self._unique_links)))
         self.print_out('* Local broken links     {:d}'.format(self._total_count_broken))
         self.print_out('* Links found            {:d}'.format(self._total_count_stored))
         self.print_out('* Spoils found           {:d}'.format(self._total_count_spoil))
         self.print_out('* External links         {:d}'.format(self._total_count_external))
 
+    def print_title(self):
+        content = "#REPORT {!s} #\n\r\n\r".format(
+            datetime.now().isoformat()
+        )
+        content += "> grepspider v0.1 by Jaume Mila <jaume@westial.com>\n\r"
+        content += "> https://github.com/westial/grepspider\n\r"
+        self.print_out(content)
+
+    def print_out(self, content=""):
+        if self._output_file:
+            try:
+                with open(self._output_file, 'a+') as output:
+                    content = '{!s}\n\r'.format(content)
+                    output.write(content)
+            except (IOError, UnboundLocalError) as exc:
+                raise Exception(
+                    'Output file error. Exception: {!s}'.format(str(exc))
+                )
+        else:
+            print(content)
+
     def link_report(self):
         if self._stored_broken_links:
             self.print_out(
-                '\n## [!] Broken Link ({!s}) ##\n'.format(self._parsed_link.original)
+                '\n\r## [!] Broken Link ({!s}) ##\n\r'.format(self._parsed_link.original)
             )
             self.broken_links_out()
             return
@@ -159,19 +185,19 @@ class MarkDownReport(Report):
         self.print_out('## [v] Report for ({!s}) ##'.format(self._parsed_link.original))
         if self._stored_links:
             self.print_out(
-                '\n### Found Links ({:d}) ###\n'.format(
+                '\n\r### Found Links ({:d}) ###\n\r'.format(
                     self._count_stored
                 )
             )
             self.found_links_out()
         if self._stored_spoils:
             self.print_out(
-                '\n### Found Spoils ({:d}) ###\n'.format(self._count_spoil)
+                '\n\r### Found Spoils ({:d}) ###\n\r'.format(self._count_spoil)
             )
             self.spoils_out()
         if self._stored_ext_links:
             self.print_out(
-                '\n### External Links ({:d}) ###\n'.format(self._count_external)
+                '\n\r### External Links ({:d}) ###\n\r'.format(self._count_external)
             )
             self.ext_links_out()
         self.print_out()
