@@ -13,7 +13,7 @@ sys.path.append('..')
 
 class TestGrepSpider(unittest.TestCase):
 
-    PAGES_ROOL_URL = 'http://localhost/grepspider/pages'
+    PAGES_ROOT_URL = 'http://localhost/grepspider/pages'
 
     def setUp(self):
         self.links = None
@@ -80,8 +80,8 @@ class TestGrepSpider(unittest.TestCase):
 
     @classmethod
     def provide_2_links(cls):
-        return ['{!s}/page10.html'.format(cls.PAGES_ROOL_URL), '{!s}/page1.html'.format(cls.PAGES_ROOL_URL)]
+        return ['{!s}/page10.html'.format(cls.PAGES_ROOT_URL), '{!s}/page1.html'.format(cls.PAGES_ROOT_URL)]
 
     @classmethod
     def provide_1_link_recursive(cls):
-        return ['{!s}/page1.html'.format(cls.PAGES_ROOL_URL)]
+        return ['{!s}/page1.html'.format(cls.PAGES_ROOT_URL)]

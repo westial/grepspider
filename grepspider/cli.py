@@ -116,3 +116,7 @@ signal.signal(signal.SIGINT , signal_term)
 
 spider = Spider(*links, recursive=recursive, output_file=output_file)
 spider.crawl(*regex_flags, spoil_pattern=spoil_pattern)
+
+# if __name__ == '__main__':
+#     from grepspider.__main__ import run
+#     run()

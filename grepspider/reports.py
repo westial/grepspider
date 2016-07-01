@@ -50,9 +50,9 @@ class Report:
         if not found_links:
             return
         new_link = found_links.pop(0)
-        self._push_found_link(new_link)
         parsed_new_link = self._parsed_link.format_link(new_link)
         new_link = parsed_new_link.original
+        self._push_found_link(new_link)
         if not self._parsed_link.is_same_domain(new_link):
             self._push_external(new_link)
         elif new_link not in self._unique_links:
@@ -158,7 +158,7 @@ class MarkDownReport(Report):
             datetime.now().isoformat()
         )
         content += "> grepspider v0.1 by Jaume Mila <jaume@westial.com>\n\r"
-        content += "> https://github.com/westial/grepspider\n\r"
+        content += "> [https://github.com/westial/grepspider]\n\r"
         self.print_out(content)
 
     def print_out(self, content=""):
@@ -177,12 +177,12 @@ class MarkDownReport(Report):
     def link_report(self):
         if self._stored_broken_links:
             self.print_out(
-                '\n\r## [!] Broken Link ({!s}) ##\n\r'.format(self._parsed_link.original)
+                '\n\r## Broken Link ({!s}) ##\n\r'.format(self._parsed_link.original)
             )
             self.broken_links_out()
             return
 
-        self.print_out('## [v] Report for ({!s}) ##'.format(self._parsed_link.original))
+        self.print_out('## Report for [{!s}] ##'.format(self._parsed_link.original))
         if self._stored_links:
             self.print_out(
                 '\n\r### Found Links ({:d}) ###\n\r'.format(
@@ -206,20 +206,20 @@ class MarkDownReport(Report):
     def found_links_out(self):
         if not self._stored_links:
             return
-        self.print_out('# {!s}'.format(self._stored_links.pop(0)))
+        self.print_out('- {!s}'.format(self._stored_links.pop(0)))
         return self.found_links_out()
 
     def spoils_out(self):
         if not self._stored_spoils:
             return
-        self.print_out('# {!s}'.format(self._stored_spoils.pop(0)))
+        self.print_out('- {!s}'.format(self._stored_spoils.pop(0)))
         return self.spoils_out()
 
     def broken_links_out(self):
         if not self._stored_broken_links:
             return
         error, link = self._stored_broken_links.pop(0)
-        self.print_out('# {!s} - {!s}'.format(error, link))
+        self.print_out('- {!s} - {!s}'.format(error, link))
         return self.broken_links_out()
 
     def ext_links_out(self):
