@@ -5,7 +5,7 @@ usage: grepspider [-h] [-e REGEX] [-r] [-i] [-a] [-l] [-m] [-d]
                   urls [urls ...]
 
 positional arguments:
-  urls                  Page url to crawl.
+  urls                  Page urls list to crawl.
 
 optional arguments:
   -h, --help            show this help message and exit
