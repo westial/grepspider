@@ -1,4 +1,4 @@
-from urllib.parse import urlparse, ParseResult, urlunparse
+from urllib.parse import urlparse
 
 
 class ParsedLink(object):
@@ -19,18 +19,13 @@ class ParsedLink(object):
 
     def format_link(self, in_link):
         out_parsed = ParsedLink(in_link)
+        in_link, out_parsed = self._format_relative_dir(in_link, out_parsed)
         if out_parsed.netloc:
-            if in_link.startswith('//'):
-                out_parsed.scheme = self.scheme
-                out_parsed.original = '{!s}:{!s}'.format(
-                    self.scheme, out_parsed.original
-                )
+            out_parsed = self._format_relative_scheme(in_link, out_parsed)
             return out_parsed
+        out_parsed = self._format_relative_root_dir(in_link, out_parsed)
         out_parsed.scheme = self.scheme
         out_parsed.netloc = self.netloc
-        if not in_link.startswith('/'):
-            base_path = self.base_path(self.path)
-            out_parsed.path = self.join_paths([base_path, out_parsed.path])
         out_parsed.query = self.query
         out_parsed._original = '{!s}{!s}'.format(
             out_parsed.domain_url,
@@ -38,10 +33,35 @@ class ParsedLink(object):
         )
         return out_parsed
 
+    def _format_relative_dir(self, in_link, out_parsed):
+        if in_link.startswith('..'):
+            out_parsed.path = out_parsed.path[2:]       # remove ".."
+            in_link = in_link[2:]
+            base_path = self.level_up_path(self.path, 2)
+            out_parsed.path = self.join_paths([base_path, out_parsed.path])
+        elif in_link.startswith('.'):
+            out_parsed.path = out_parsed.path[2:]       # remove "./"
+            in_link = in_link[2:]
+        return in_link, out_parsed
+
+    def _format_relative_root_dir(self, in_link, out_parsed):
+        if not in_link.startswith('/'):
+            base_path = self.level_up_path(self.path)
+            out_parsed.path = self.join_paths([base_path, out_parsed.path])
+        return out_parsed
+
+    def _format_relative_scheme(self, in_link, out_parsed):
+        if in_link.startswith('//'):
+            out_parsed.scheme = self.scheme
+            out_parsed.original = '{!s}:{!s}'.format(
+                self.scheme, out_parsed.original
+            )
+        return out_parsed
+
     @classmethod
-    def base_path(cls, path):
+    def level_up_path(cls, path, level=1):
         parts = path.split('/')
-        return '/'.join(parts[:-1])
+        return '/'.join(parts[:level*(-1)])
 
     @classmethod
     def join_paths(cls, parts):

@@ -70,7 +70,6 @@ class Report:
         self._stored_links.append(found_link)
 
     def _push_link(self, link):
-        self._count_stored += 1
         self._unique_links.add(link)
         if self._recursive:
             self._links.append(link)
