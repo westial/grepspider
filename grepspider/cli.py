@@ -11,10 +11,12 @@ import signal
 from grepspider.spider import Spider
 
 
-def signal_term():
+def signal_term(signum, frame):
     global spider
     spider.print_out('\n--- Caught SIGTERM; Attempting to quit gracefully ---')
     spider.statistics()
+    del spider
+    exit(130)
 
 parser = argparse.ArgumentParser(
     description='Recursive web crawler with regular expression content filter.'
@@ -90,7 +92,7 @@ arg_config = parser.parse_args()
 links = arg_config.urls
 spoil_pattern = arg_config.regex
 recursive = arg_config.recursive
-output_file = arg_config.output_file
+output_file = arg_config.output
 
 regex_flags = list()
 

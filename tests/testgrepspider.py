@@ -34,27 +34,27 @@ class TestGrepSpider(unittest.TestCase):
         self._crawl(self.provide_1_link_recursive, re.IGNORECASE, recursive=True)
         unique = 11
         broken = 1
-        stored = 35
+        stored = 36
         spoil = 31
-        external = 1
+        external = 2
         self._assert_counters(unique, broken, stored, spoil, external)
 
     def test_recursive_no_flags(self):
         self._crawl(self.provide_1_link_recursive, recursive=True)
         unique = 11
         broken = 1
-        stored = 35
+        stored = 36
         spoil = 21
-        external = 1
+        external = 2
         self._assert_counters(unique, broken, stored, spoil, external)
 
     def test_no_recursive_multiple(self):
         self._crawl(self.provide_2_links, re.IGNORECASE)
         unique = 7
         broken = 0
-        stored = 12
+        stored = 13
         spoil = 7
-        external = 1
+        external = 2
         self._assert_counters(unique, broken, stored, spoil, external)
 
     def _assert_counters(self, unique, broken, stored, spoil, external):

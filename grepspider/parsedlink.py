@@ -17,21 +17,26 @@ class ParsedLink(object):
         other = ParsedLink(other_link)
         return not bool(other.netloc) or self.domain_url == other.domain_url
 
-    def absolute_link(self, relative):
-        absolute = ParsedLink(relative)
-        if absolute.netloc:
-            return absolute
-        absolute.scheme = self.scheme
-        absolute.netloc = self.netloc
-        if not relative.startswith('/'):
+    def format_link(self, in_link):
+        out_parsed = ParsedLink(in_link)
+        if out_parsed.netloc:
+            if in_link.startswith('//'):
+                out_parsed.scheme = self.scheme
+                out_parsed.original = '{!s}:{!s}'.format(
+                    self.scheme, out_parsed.original
+                )
+            return out_parsed
+        out_parsed.scheme = self.scheme
+        out_parsed.netloc = self.netloc
+        if not in_link.startswith('/'):
             base_path = self.base_path(self.path)
-            absolute.path = self.join_paths([base_path, absolute.path])
-        absolute.query = self.query
-        absolute._original = '{!s}{!s}'.format(
-            absolute.domain_url,
-            absolute.after_domain
+            out_parsed.path = self.join_paths([base_path, out_parsed.path])
+        out_parsed.query = self.query
+        out_parsed._original = '{!s}{!s}'.format(
+            out_parsed.domain_url,
+            out_parsed.after_domain
         )
-        return absolute
+        return out_parsed
 
     @classmethod
     def base_path(cls, path):
@@ -93,6 +98,10 @@ class ParsedLink(object):
     @property
     def query(self):
         return self._query
+
+    @original.setter
+    def original(self, value):
+        self._original = value
 
     @scheme.setter
     def scheme(self, value):

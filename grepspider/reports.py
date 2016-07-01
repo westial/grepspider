@@ -30,7 +30,7 @@ class Report:
         self._count_external = 0
         self._count_spoil = 0
 
-    def print_out(self, content):
+    def print_out(self, content=""):
         if self._output_file:
             try:
                 with open(self._output_file, 'w+') as output:
@@ -60,7 +60,7 @@ class Report:
             return
         new_link = found_links.pop(0)
         self._push_found_link(new_link)
-        parsed_new_link = self._parsed_link.absolute_link(new_link)
+        parsed_new_link = self._parsed_link.format_link(new_link)
         new_link = parsed_new_link.original
         if not self._parsed_link.is_same_domain(new_link):
             self._push_external(new_link)
