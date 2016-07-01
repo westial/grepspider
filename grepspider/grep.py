@@ -22,7 +22,10 @@ class Grep(object):
         self._spoil_pattern = spoil_pattern
         self._found_links = None
         self._found_spoils = None
-        self._regex_flags = self._merge_regex_flags(list(regex_flags))
+        if regex_flags:
+            self._regex_flags = self._merge_regex_flags(list(regex_flags))
+        else:
+            self._regex_flags = None
 
     def run(self):
         """
