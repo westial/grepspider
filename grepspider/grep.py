@@ -9,8 +9,7 @@ from grepspider.parsedlink import ParsedLink
 
 class Grep(object):
 
-    _LINK_PATTERN = '''(?:href=|src=|Location:)(?:\s+|["'])''' \
-                    '''((?:.[^"'\s]+|https?://[^\s]*))'''
+    _LINK_PATTERN = '''(?:href=|src=|Location:)(?: +|["'])([^"'\r\n]+)'''
 
     def __init__(
             self,

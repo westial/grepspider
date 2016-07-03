@@ -8,7 +8,11 @@ import re
 
 import signal
 
+import sys
+
 from grepspider.spider import Spider
+
+sys.setrecursionlimit(1000000)
 
 
 def signal_term(signum, frame):
