@@ -18,7 +18,12 @@ class Spider(REPORT_TYPE):
             return
         link = self._pop_link()
         self._parsed_link = ParsedLink(link)
-        crawler = Grep(self._parsed_link, *flags, spoil_pattern=spoil_pattern)
+        crawler = Grep(
+            self._parsed_link,
+            *flags,
+            spoil_pattern=spoil_pattern,
+            headers=self._headers
+        )
         try:
             crawler.run()
             self._update_links(crawler.links)

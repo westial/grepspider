@@ -10,9 +10,10 @@ class Report:
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, *link, recursive=False, output_file=None):
+    def __init__(self, *link, recursive=False, output_file=None, headers=None):
         self._recursive = recursive
         self._output_file = output_file
+        self._headers = headers
         self._links = list(link)
         self._unique_links = set(self._links)
         self._parsed_link = None

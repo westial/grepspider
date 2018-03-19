@@ -15,12 +15,16 @@ class Grep(object):
             self,
             parsed_link: ParsedLink,
             *regex_flags,
-            spoil_pattern=None
+            spoil_pattern=None,
+            headers=None
     ):
         self._parsed_link = parsed_link
         self._spoil_pattern = spoil_pattern
         self._found_links = None
         self._found_spoils = None
+        self._headers = REQUEST_HEADERS
+        if headers:
+            self._headers.update(headers)
         if regex_flags:
             self._regex_flags = self._merge_regex_flags(list(regex_flags))
         else:
@@ -87,7 +91,7 @@ class Grep(object):
         connection.request(
             'GET',
             self._parsed_link.after_domain,
-            headers=REQUEST_HEADERS
+            headers=self._headers
         )
         response = connection.getresponse()
         status = int(response.status)
