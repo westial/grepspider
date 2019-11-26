@@ -15,6 +15,8 @@ from grepspider.spider import Spider
 
 sys.setrecursionlimit(1000000)
 
+spider = None
+
 
 def parse_headers(raw_headers):
     parsed_headers = dict()
@@ -111,41 +113,47 @@ parser.add_argument(
     help='CURL-like header parameter headers list, for example "Accept: application/json"'
 )
 
-arg_config = parser.parse_args()
 
-links = arg_config.urls
-spoil_pattern = arg_config.regex
-recursive = arg_config.recursive
-output_file = arg_config.output
+def main():
+    global spider
+    arg_config = parser.parse_args()
 
-regex_flags = list()
-headers = None
+    links = arg_config.urls
+    spoil_pattern = arg_config.regex
+    recursive = arg_config.recursive
+    output_file = arg_config.output
 
-if arg_config.ignorecase:
-    regex_flags.append(re.IGNORECASE)
+    regex_flags = list()
+    headers = None
 
-if arg_config.ascii:
-    regex_flags.append(re.ASCII)
+    if arg_config.ignorecase:
+        regex_flags.append(re.IGNORECASE)
 
-if arg_config.locale:
-    regex_flags.append(re.LOCALE)
+    if arg_config.ascii:
+        regex_flags.append(re.ASCII)
 
-if arg_config.multiline:
-    regex_flags.append(re.MULTILINE)
+    if arg_config.locale:
+        regex_flags.append(re.LOCALE)
 
-if arg_config.dotall:
-    regex_flags.append(re.DOTALL)
+    if arg_config.multiline:
+        regex_flags.append(re.MULTILINE)
 
-if arg_config.headers:
-    headers = parse_headers(arg_config.headers)
+    if arg_config.dotall:
+        regex_flags.append(re.DOTALL)
 
-signal.signal(signal.SIGTERM, signal_term)
-signal.signal(signal.SIGINT , signal_term)
+    if arg_config.headers:
+        headers = parse_headers(arg_config.headers)
 
-spider = Spider(
-    *links,
-    recursive=recursive,
-    output_file=output_file,
-    headers=headers
-)
-spider.crawl(*regex_flags, spoil_pattern=spoil_pattern)
+    signal.signal(signal.SIGTERM, signal_term)
+    signal.signal(signal.SIGINT , signal_term)
+
+    spider = Spider(
+        *links,
+        recursive=recursive,
+        output_file=output_file,
+        headers=headers
+    )
+    spider.crawl(*regex_flags, spoil_pattern=spoil_pattern)
+
+if __name__ == "__main__":
+    main()

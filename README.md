@@ -1,9 +1,8 @@
 ```
-Recursive web crawler with regular expression search engine. Python 3 only.
-
-usage: __main__.py [-h] [-e REGEX] [-o OUTPUT] [-r] [-i] [-a] [-l] [-m] [-d]
-                   [-H HEADERS [HEADERS ...]]
-                   urls [urls ...]
+$ grepspider --help
+usage: grepspider [-h] [-e REGEX] [-o OUTPUT] [-r] [-i] [-a] [-l] [-m] [-d]
+                  [-H HEADERS [HEADERS ...]]
+                  urls [urls ...]
 
 Recursive web crawler with regular expression content filter.
 
@@ -25,4 +24,5 @@ optional arguments:
   -H HEADERS [HEADERS ...], --headers HEADERS [HEADERS ...]
                         CURL-like header parameter headers list, for example
                         "Accept: application/json"
+
 ```

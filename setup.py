@@ -7,6 +7,11 @@ setup(
     name='grepspider',
     version=version,
     packages=['grepspider'],
+    entry_points={
+        "console_scripts": [
+            'grepspider = grepspider.cli:main'
+        ]
+    },
     url='https://github.com/westial/grepspider',
     license='GPL v3',
     author='Jaume Mila',
