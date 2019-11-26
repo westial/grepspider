@@ -1,3 +1,21 @@
+grepspider
+==========
+
+Commandline spider script to crawl a full website and find the spoils you are 
+looking for.
+
+## Requirements ##
+
+* python 3.6+
+
+## Install ##
+
+```
+git clone https://github.com/westial/grepspider.git
+cd grepspider/
+pip3 install ./
+```
+
 ```
 $ grepspider --help
 usage: grepspider [-h] [-e REGEX] [-o OUTPUT] [-r] [-i] [-a] [-l] [-m] [-d]
