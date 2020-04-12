@@ -44,3 +44,28 @@ optional arguments:
                         "Accept: application/json"
 
 ```
+
+## Combine with grep ##
+
+Doing grep against the grepspider output it's the most powerful feature this
+program can provide. Following, an example of use:
+
+First, recursively crawl a website and all of its known subdomains:
+
+```
+grepspider --recursive \
+    --output largewebsite-grepspider.log \
+    https://www.largewebsite.dot \
+    https://largewebsite.dot \
+    https://sub.largewebsite.dot
+```
+
+If you want to monitor the session use `tail -f largewebsite-grepspider.log`, 
+and also you can pipe the following commands to this tail command to instantly 
+get the output as the program crawls the pages.
+
+Grep command examples to use with the output:
+
+* Broken links: `grep "## Broken Link " largewebsite-grepspider.log`
+* HTTP 5XX errors: `grep "\- Status 5\-" largewebsite-grepspider.log`
+* HTTP 4XX errors: `grep "\- Status 4\-" largewebsite-grepspider.log`
