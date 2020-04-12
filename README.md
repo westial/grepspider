@@ -18,8 +18,8 @@ pip3 install ./
 
 ```
 $ grepspider --help
-usage: grepspider [-h] [-e REGEX] [-o OUTPUT] [-r] [-i] [-a] [-l] [-m] [-d]
-                  [-H HEADERS [HEADERS ...]]
+usage: grepspider [-h] [-e REGEX] [-C CONTEXT] [-o OUTPUT] [-r] [-i] [-a] [-l]
+                  [-m] [-d] [-H HEADERS [HEADERS ...]]
                   urls [urls ...]
 
 Recursive web crawler with regular expression content filter.
@@ -30,7 +30,11 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -e REGEX, --regex REGEX
-                        User with permission on server
+                        Regular expression to capture spoils
+  -C CONTEXT, --context CONTEXT
+                        Capture the number of characters before and after the
+                        spoil so you can see the context of every spoil in the
+                        output
   -o OUTPUT, --output OUTPUT
                         Writes output to this file
   -r, --recursive       Follow links
@@ -42,7 +46,6 @@ optional arguments:
   -H HEADERS [HEADERS ...], --headers HEADERS [HEADERS ...]
                         CURL-like header parameter headers list, for example
                         "Accept: application/json"
-
 ```
 
 ## Combine with grep ##
@@ -53,7 +56,10 @@ program can provide. Following, an example of use:
 First, recursively crawl a website and all of its known subdomains:
 
 ```
-grepspider --recursive \
+grepspider --context 50 \
+    --regex "lorem ipsum" \
+    --ignorecase \
+    --recursive \
     --output largewebsite-gs.log \
     https://www.largewebsite.dot \
     https://largewebsite.dot \
