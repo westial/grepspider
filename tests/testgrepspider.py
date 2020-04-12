@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Unit test for Controller methods
+
+Run a docker nginx server from the samples folder:
+```
+cd tests/samples
+docker run -p 8000:80 -v $(pwd):/usr/share/nginx/html nginx
+```
 """
 import sys
 import unittest
@@ -13,7 +19,7 @@ sys.path.append('..')
 
 class TestGrepSpider(unittest.TestCase):
 
-    PAGES_ROOT_URL = 'http://localhost/grepspider/pages'
+    PAGES_ROOT_URL = 'http://localhost:8000/pages'
 
     def setUp(self):
         self.links = None
@@ -48,6 +54,18 @@ class TestGrepSpider(unittest.TestCase):
         external = 2
         self._assert_counters(unique, broken, stored, spoil, external)
 
+    def test_mailto_link_issue(self):
+        """
+        @see https://github.com/westial/grepspider/issues/1
+        """
+        self._crawl(self.provide_mailto_link, recursive=True)
+        unique = 1
+        broken = 0
+        stored = 0
+        spoil = 2
+        external = 0
+        self._assert_counters(unique, broken, stored, spoil, external)
+
     def test_no_recursive_multiple(self):
         self._crawl(self.provide_2_links, re.IGNORECASE)
         unique = 8
@@ -59,19 +77,19 @@ class TestGrepSpider(unittest.TestCase):
 
     def _assert_counters(self, unique, broken, stored, spoil, external):
         self.assertEqual(
-            len(self.spider._unique_links), unique, 'Local unique links'
+            unique, len(self.spider._unique_links), 'Local unique links'
         )
         self.assertEqual(
-            self.spider._total_count_broken, broken, 'Local broken links'
+            broken, self.spider._total_count_broken, 'Local broken links'
         )
         self.assertEqual(
-            self.spider._total_count_stored, stored, 'Links found'
+            stored, self.spider._total_count_stored, 'Links found'
         )
         self.assertEqual(
-            self.spider._total_count_spoil, spoil, 'Spoils found'
+            spoil, self.spider._total_count_spoil, 'Spoils found'
         )
         self.assertEqual(
-            self.spider._total_count_external, external, 'External links'
+            external, self.spider._total_count_external, 'External links'
         )
 
     @classmethod
@@ -85,3 +103,7 @@ class TestGrepSpider(unittest.TestCase):
     @classmethod
     def provide_1_link_recursive(cls):
         return ['{!s}/page1.html'.format(cls.PAGES_ROOT_URL)]
+
+    @classmethod
+    def provide_mailto_link(cls):
+        return ['{!s}/page_mailto.html'.format(cls.PAGES_ROOT_URL)]
