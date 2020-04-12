@@ -177,27 +177,38 @@ class MarkDownReport(Report):
     def link_report(self):
         if self._stored_broken_links:
             self.print_out(
-                '\n\r## Broken Link ({!s}) ##\n\r'.format(self._parsed_link.original)
+                '\n\r## Broken Link ({!s}) ##\n\r'.format(
+                    self._parsed_link.original
+                )
             )
             self.broken_links_out()
             return
 
-        self.print_out('## Report for [{!s}] ##'.format(self._parsed_link.original))
+        self.print_out(
+            '## Report for [{!s}] ##'.format(self._parsed_link.original)
+        )
         if self._stored_links:
             self.print_out(
-                '\n\r### Found Links ({:d}) ###\n\r'.format(
+                '\n\r### Found Links {!s} ({:d}) ###\n\r'.format(
+                    self._parsed_link.original,
                     self._count_stored
                 )
             )
             self.found_links_out()
         if self._stored_spoils:
             self.print_out(
-                '\n\r### Found Spoils ({:d}) ###\n\r'.format(self._count_spoil)
+                '\n\r### Found Spoils {!s} ({:d}) ###\n\r'.format(
+                    self._parsed_link.original,
+                    self._count_spoil
+                )
             )
             self.spoils_out()
         if self._stored_ext_links:
             self.print_out(
-                '\n\r### External Links ({:d}) ###\n\r'.format(self._count_external)
+                '\n\r### External Links {!s} ({:d}) ###\n\r'.format(
+                    self._parsed_link.original,
+                    self._count_external
+                )
             )
             self.ext_links_out()
         self.print_out()

@@ -6,10 +6,11 @@ from grepspider.parsedlink import ParsedLink
 
 class Spider(REPORT_TYPE):
 
-    def crawl(self, *flags, spoil_pattern=None):
+    def crawl(self, *flags, spoil_pattern=None, spoil_context=0):
         """
         Recursively crawl all links, store links and spoils if required.
         :param flags: args
+        :param spoil_context: int
         :param spoil_pattern: str
         :return: None|function
         """
@@ -21,7 +22,7 @@ class Spider(REPORT_TYPE):
         crawler = Grep(
             self._parsed_link,
             *flags,
-            spoil_pattern=spoil_pattern,
+            spoil_pattern=self._build_spoil(spoil_pattern, spoil_context),
             headers=self._headers
         )
         try:
@@ -35,3 +36,11 @@ class Spider(REPORT_TYPE):
             *flags,
             spoil_pattern=spoil_pattern
         )
+
+    @classmethod
+    def _build_spoil(cls, spoil_pattern, spoil_context):
+        if not spoil_context:
+            return spoil_pattern
+        else:
+            context_fix = ".{{,{:d}}}".format(int(spoil_context / 2))
+            return context_fix + spoil_pattern + context_fix

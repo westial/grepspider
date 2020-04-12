@@ -27,13 +27,28 @@ class TestGrepSpider(unittest.TestCase):
         pass
 
     def _crawl(self, provider, *flags, recursive=False):
+        self._crawl_by_spoil(
+            provider,
+            'title[^(?: is not a spoil)]',
+            *flags,
+            recursive=recursive
+        )
+
+    def _crawl_by_spoil(
+            self,
+            provider,
+            spoil_pattern,
+            *flags,
+            recursive=False,
+            spoil_context=0
+    ):
         links = tuple(provider())
         regex_flags = flags
-        spoil_pattern = 'title[^(?: is not a spoil)]'
         self.spider = Spider(*links, recursive=recursive)
         self.spider.crawl(
             *regex_flags,
-            spoil_pattern=spoil_pattern
+            spoil_pattern=spoil_pattern,
+            spoil_context=spoil_context
         )
 
     def test_recursive(self):
@@ -64,6 +79,21 @@ class TestGrepSpider(unittest.TestCase):
         stored = 0
         spoil = 2
         external = 0
+        self._assert_counters(unique, broken, stored, spoil, external)
+
+    def test_clear_spoil(self):
+        self._crawl_by_spoil(
+            self.provide_clear_spoil_link,
+            "lorem ipsum",
+            re.IGNORECASE,
+            recursive=False,
+            spoil_context=100
+        )
+        unique = 29
+        broken = 0
+        stored = 94
+        spoil = 23
+        external = 61
         self._assert_counters(unique, broken, stored, spoil, external)
 
     def test_no_recursive_multiple(self):
@@ -107,3 +137,7 @@ class TestGrepSpider(unittest.TestCase):
     @classmethod
     def provide_mailto_link(cls):
         return ['{!s}/page_mailto.html'.format(cls.PAGES_ROOT_URL)]
+
+    @classmethod
+    def provide_clear_spoil_link(cls):
+        return ['{!s}/loremipsum.html'.format(cls.PAGES_ROOT_URL)]

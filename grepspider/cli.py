@@ -52,7 +52,16 @@ parser.add_argument(
     '--regex',
     type=str,
     required=False,
-    help='User with permission on server'
+    help='Regular expression to capture spoils'
+)
+
+parser.add_argument(
+    '-C',
+    '--context',
+    type=int,
+    default=0,
+    help='Capture the number of characters before and after the spoil so you '
+         'can see the context of every spoil in the output'
 )
 
 parser.add_argument(
@@ -120,6 +129,7 @@ def main():
 
     links = arg_config.urls
     spoil_pattern = arg_config.regex
+    spoil_context = int(arg_config.context)
     recursive = arg_config.recursive
     output_file = arg_config.output
 
@@ -145,7 +155,7 @@ def main():
         headers = parse_headers(arg_config.headers)
 
     signal.signal(signal.SIGTERM, signal_term)
-    signal.signal(signal.SIGINT , signal_term)
+    signal.signal(signal.SIGINT, signal_term)
 
     spider = Spider(
         *links,
@@ -153,7 +163,8 @@ def main():
         output_file=output_file,
         headers=headers
     )
-    spider.crawl(*regex_flags, spoil_pattern=spoil_pattern)
+    spider.crawl(*regex_flags, spoil_pattern=spoil_pattern, spoil_context=spoil_context)
+
 
 if __name__ == "__main__":
     main()

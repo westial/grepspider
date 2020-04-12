@@ -54,18 +54,24 @@ First, recursively crawl a website and all of its known subdomains:
 
 ```
 grepspider --recursive \
-    --output largewebsite-grepspider.log \
+    --output largewebsite-gs.log \
     https://www.largewebsite.dot \
     https://largewebsite.dot \
     https://sub.largewebsite.dot
 ```
 
-If you want to monitor the session use `tail -f largewebsite-grepspider.log`, 
+If you want to monitor the session use `tail -f largewebsite-gs.log`, 
 and also you can pipe the following commands to this tail command to instantly 
 get the output as the program crawls the pages.
 
-Grep command examples to use with the output:
+Grep command examples to use from the output to check HTTP issues:
 
-* Broken links: `grep "## Broken Link " largewebsite-grepspider.log`
-* HTTP 5XX errors: `grep "\- Status 5\-" largewebsite-grepspider.log`
-* HTTP 4XX errors: `grep "\- Status 4\-" largewebsite-grepspider.log`
+* Broken links: `grep "## Broken Link " largewebsite-gs.log`
+* HTTP 5XX errors: `grep "\- Status 5\-" largewebsite-gs.log`
+* HTTP 4XX errors: `grep "\- Status 4\-" largewebsite-gs.log`
+
+Grep command examples to get count and enumerate spoil and link results by page:
+
+* Spoil count and first 3: `grep -A4 "## Found Spoils" largewebsite-gs.log`
+* External links and first 4: `grep -A5 "## External Links" largewebsite-gs.log`
+* Total links and first 6: `grep -A7 "## Found Links" largewebsite-gs.log`
